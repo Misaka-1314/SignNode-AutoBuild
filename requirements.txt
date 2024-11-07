@@ -6,4 +6,3 @@ requests
 websockets
 pyyaml
 pycryptodome
-pysqlite3

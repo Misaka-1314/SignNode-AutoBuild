@@ -1,0 +1,56 @@
+name: 构建并发布PyInstaller应用
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            ext: ''
+          - os: windows-latest
+            ext: '.exe'
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置Python环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: 下载最新代码
+        run: |
+          curl -o "main.py" "https://api.waadri.top/ChaoXing/download/other-signin-node.py"
+  
+      - name: 篡改位置
+        run: |
+          sed -i 's/user_list\[uid\]\["address"\]/os.getenv("HAPPY", user_list[uid]\["address"\])/g' "main.py"
+          sed -i 's/sign_data\["address"\] = address/sign_data\["address"\] = os.getenv("HAPPY", address)/g' "main.py"
+          sed -i 's/set_address = address/set_address = os.getenv("HAPPY", address)/g' "main.py"
+
+      - name: 使用PyInstaller构建
+        run: |
+          pyinstaller --onefile --name sign-node main.py  # 设置输出文件名为sign-node
+
+      - name: 创建发布版本
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./dist/sign-node${{ matrix.ext }}
