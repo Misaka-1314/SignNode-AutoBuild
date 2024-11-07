@@ -53,4 +53,5 @@ jobs:
       - name: 创建发布版本
         uses: softprops/action-gh-release@v2
         with:
-          files: ./dist/sign-node${{ matrix.ext }}
+          files: ./dist/*
+          tag_name: v1.0.0
