@@ -18,23 +18,23 @@ jobs:
 
     steps:
       - name: 获取最新版本信息
-        id: get_version
+        id: get-version
         uses: fjogeleit/http-request-action@v1
         with:
           url: 'https://api.waadri.top/ChaoXing/api/get_version.json'
           method: 'GET'
       
       - name: 显示输出
-        run: echo "${{ steps.get_version.outputs.response }}"
+        run: echo "${{ steps.get-version.outputs.response }}"
 
       - name: 设置输出
         id: parse-response
         run: |
-          echo "VERSION=${{ fromJson(steps.get_version.outputs.response).latest_version }}" >> $GITHUB_OUTPUT
-          echo "URL=${{ fromJson(steps.get_version.outputs.response).py_download_url }}" >> $GITHUB_OUTPUT
+          echo "VERSION=${{ fromJson(steps.get-version.outputs.response).latest_version }}" >> $GITHUB_OUTPUT
+          echo "URL=${{ fromJson(steps.get-version.outputs.response).py_download_url }}" >> $GITHUB_OUTPUT
 
-          echo "VERSION=${{ fromJson(steps.get_version.outputs.response).latest_version }}" >> $GITHUB_ENV
-          echo "URL=${{ fromJson(steps.get_version.outputs.response).py_download_url }}" >> $GITHUB_ENV
+          echo "VERSION=${{ fromJson(steps.get-version.outputs.response).latest_version }}" >> $GITHUB_ENV
+          echo "URL=${{ fromJson(steps.get-version.outputs.response).py_download_url }}" >> $GITHUB_ENV
 
   pyinstaller-linux:
     runs-on: ubuntu-latest
