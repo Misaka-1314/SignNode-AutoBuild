@@ -61,13 +61,13 @@ jobs:
 
       - name: 使用PyInstaller构建
         run: |
-          pyinstaller --onefile --name sign-node.linux-amd64.out main.py        
+          pyinstaller --onefile --name sign-node main.py        
           
       - name: 上传构建文件 (Linux)
         uses: actions/upload-artifact@v4
         with:
-          name: sign-node.linux-amd64.out
-          path: ./dist/sign-node.linux-amd64.out
+          name: sign-node.linux-amd64
+          path: ./dist/sign-node
 
   pyinstaller-windows:
     runs-on: windows-latest
@@ -87,7 +87,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller
-          choco install zip
 
       - name: 下载最新代码
         run: |
@@ -95,13 +94,13 @@ jobs:
 
       - name: 使用PyInstaller构建
         run: |
-          pyinstaller --onefile --name sign-node.windows-amd64.exe main.py
+          pyinstaller --onefile --name sign-node.exe main.py
 
       - name: 上传构建文件 (Windows)
         uses: actions/upload-artifact@v4
         with:
-          name: sign-node.windows-amd64.exe
-          path: ./dist/sign-node.windows-amd64.exe
+          name: sign-node.windows-amd64
+          path: ./dist/sign-node.exe
 
   release:
     runs-on: ubuntu-latest
@@ -122,10 +121,18 @@ jobs:
       - name: 文件目录
         run: ls -R ./
 
+      - name: 安装 zip
+        uses: montudor/action-zip@v1
+
+      - name: 压缩文件
+        run: |
+          zip -r sign-node.linux-amd64.zip ./sign-node
+          zip -r sign-node.windows-amd64.zip ./sign-node.exe
+
       - name: 创建发布版本
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            sign-node.linux-amd64.out
-            sign-node.windows-amd64.exe
+            sign-node.linux-amd64.zip
+            sign-node.windows-amd64.zip
           tag_name: "v${{ needs.fetch-version.outputs.VERSION }}"
