@@ -1,29 +1,23 @@
 name: 构建并发布 PyInstaller 应用
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_call:
 
 jobs:
-
   fetch-version:
     runs-on: ubuntu-latest
     outputs:
       VERSION: ${{ steps.parse-response.outputs.VERSION }}
-      URL: ${{ steps.parse-response.outputs.URL }}   
+      URL: ${{ steps.parse-response.outputs.URL }}
 
     steps:
       - name: 获取最新版本信息
         id: get-version
         uses: fjogeleit/http-request-action@v1
         with:
-          url: 'https://api.waadri.top/ChaoXing/api/get_version.json'
-          method: 'GET'
-      
+          url: "https://api.waadri.top/ChaoXing/api/get_version.json"
+          method: "GET"
+
       - name: 显示输出
         run: echo "${{ steps.get-version.outputs.response }}"
 
@@ -47,7 +41,7 @@ jobs:
       - name: 设置Python环境
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: 安装依赖
         run: |
@@ -61,8 +55,8 @@ jobs:
 
       - name: 使用PyInstaller构建
         run: |
-          pyinstaller --onefile --name sign-node main.py        
-          
+          pyinstaller --onefile --name sign-node main.py
+
       - name: 上传构建文件 (Linux)
         uses: actions/upload-artifact@v4
         with:
@@ -80,7 +74,7 @@ jobs:
       - name: 设置Python环境
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: 安装依赖
         run: |

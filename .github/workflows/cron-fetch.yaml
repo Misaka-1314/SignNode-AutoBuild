@@ -1,0 +1,68 @@
+name: 定时拉取源代码版本
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0,15,30 * * * *"
+
+jobs:
+  compare-versions:
+    runs-on: ubuntu-latest
+    outputs:
+      TRIGGER_ACTION: ${{ steps.compare-versions.outputs.TRIGGER_ACTION }}
+
+    steps:
+      - name: 获取最新版本信息
+        id: get-version
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: "https://api.waadri.top/ChaoXing/api/get_version.json"
+          method: "GET"
+
+      - name: 显示输出
+        run: echo "${{ steps.get-version.outputs.response }}"
+
+      - name: 设置输出
+        id: parse-response
+        run: |
+          echo "VERSION=${{ fromJson(steps.get-version.outputs.response).latest_version }}" >> $GITHUB_OUTPUT
+          echo "URL=${{ fromJson(steps.get-version.outputs.response).py_download_url }}" >> $GITHUB_OUTPUT
+
+          echo "VERSION=${{ fromJson(steps.get-version.outputs.response).latest_version }}" >> $GITHUB_ENV
+          echo "URL=${{ fromJson(steps.get-version.outputs.response).py_download_url }}" >> $GITHUB_ENV
+
+      - name: 获取当前发布版本
+        id: get-release-version
+        run: |
+          # 假设你存储的版本是 GitHub release 的标签版本
+          release_version=$(curl -s https://api.github.com/repos/Misaka-1314/SignNode-AutoBuild/releases/latest | jq -r .tag_name)
+          echo "CURRENT_RELEASE_VERSION=$release_version" >> $GITHUB_ENV
+          echo "CURRENT_RELEASE_VERSION=${release_version}"
+
+      - name: 比较版本
+        id: compare-versions
+        run: |
+          echo "当前版本=v${{ env.VERSION }} 已构建版本=${{ env.CURRENT_RELEASE_VERSION }}"
+
+          if [ "v$VERSION" != "$CURRENT_RELEASE_VERSION" ]; then
+            echo "版本更新，触发新的 Action"
+            echo "TRIGGER_ACTION=true" >> $GITHUB_OUTPUT
+          else
+            echo "版本未更新"
+            echo "TRIGGER_ACTION=false" >> $GITHUB_OUTPUT
+          fi
+
+  call_workflow-1:
+    needs: compare-versions
+    if: needs.compare-versions.outputs.TRIGGER_ACTION == 'true'
+    uses: Misaka-1314/SignNode-AutoBuild/.github/workflows/docker-image.yaml@main
+    secrets:
+      TENCENT_CCR_USERNAME: ${{ secrets.TENCENT_CCR_USERNAME }}
+      TENCENT_CCR_PASSWORD: ${{ secrets.TENCENT_CCR_PASSWORD }}
+
+  call_workflow-2:
+    needs: compare-versions
+    if: needs.compare-versions.outputs.TRIGGER_ACTION == 'true'
+    uses: Misaka-1314/SignNode-AutoBuild/.github/workflows/pyinstaller.yaml@main

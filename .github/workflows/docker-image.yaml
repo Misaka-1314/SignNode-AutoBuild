@@ -1,28 +1,28 @@
 name: 构建并推送 Docker 镜像
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_call:
+    secrets:
+      TENCENT_CCR_USERNAME:
+        required: true
+      TENCENT_CCR_PASSWORD:
+        required: true
 
 jobs:
   fetch-version:
     runs-on: ubuntu-latest
     outputs:
       VERSION: ${{ steps.parse-response.outputs.VERSION }}
-      URL: ${{ steps.parse-response.outputs.URL }}   
+      URL: ${{ steps.parse-response.outputs.URL }}
 
     steps:
       - name: 获取最新版本信息
         id: get-version
         uses: fjogeleit/http-request-action@v1
         with:
-          url: 'https://api.waadri.top/ChaoXing/api/get_version.json'
-          method: 'GET'
-      
+          url: "https://api.waadri.top/ChaoXing/api/get_version.json"
+          method: "GET"
+
       - name: 显示输出
         run: echo "${{ steps.get-version.outputs.response }}"
 
@@ -35,7 +35,7 @@ jobs:
           echo "VERSION=${{ fromJson(steps.get-version.outputs.response).latest_version }}" >> $GITHUB_ENV
           echo "URL=${{ fromJson(steps.get-version.outputs.response).py_download_url }}" >> $GITHUB_ENV
 
-  docker-iamge:
+  docker-image:
     runs-on: ubuntu-latest
     needs: fetch-version
 
@@ -49,30 +49,30 @@ jobs:
       - name: 缓存 Docker 构建层
         uses: actions/cache@v4
         with:
-            path: /tmp/.buildx-cache
-            key: ${{ runner.os }}-buildx-${{ github.sha }}
-            restore-keys: |
-                ${{ runner.os }}-buildx-
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
 
       - name: 登录腾讯云容器镜像仓库
         uses: docker/login-action@v3
         with:
-            registry: ccr.ccs.tencentyun.com
-            username: ${{ secrets.TENCENT_CCR_USERNAME }}
-            password: ${{ secrets.TENCENT_CCR_PASSWORD }}
+          registry: ccr.ccs.tencentyun.com
+          username: ${{ secrets.TENCENT_CCR_USERNAME }}
+          password: ${{ secrets.TENCENT_CCR_PASSWORD }}
 
       - name: 下载最新代码
         run: |
-            curl -o "main.py" "${{ needs.fetch-version.outputs.URL }}"
+          curl -o "main.py" "${{ needs.fetch-version.outputs.URL }}"
 
       - name: 篡改位置
         run: |
-            sed -i 's/user_list\[uid\]\["address"\]/os.getenv("HAPPY", user_list[uid]\["address"\])/g' "main.py"
-            sed -i 's/sign_data\["address"\] = address/sign_data\["address"\] = os.getenv("HAPPY", address)/g' "main.py"
-            sed -i 's/set_address = address/set_address = os.getenv("HAPPY", address)/g' "main.py"
-            sed -i 's/config\["node"\]\["name"\]/os.getenv("NAME", config["node"]["name"])/g' "main.py"
-            sed -i 's/config\["uuid"\]/os.getenv("UUID", config["uuid"])/g' "main.py"
-      
+          sed -i 's/user_list\[uid\]\["address"\]/os.getenv("HAPPY", user_list[uid]\["address"\])/g' "main.py"
+          sed -i 's/sign_data\["address"\] = address/sign_data\["address"\] = os.getenv("HAPPY", address)/g' "main.py"
+          sed -i 's/set_address = address/set_address = os.getenv("HAPPY", address)/g' "main.py"
+          sed -i 's/config\["node"\]\["name"\]/os.getenv("NAME", config["node"]["name"])/g' "main.py"
+          sed -i 's/config\["uuid"\]/os.getenv("UUID", config["uuid"])/g' "main.py"
+
       - name: 上传 Python 代码
         uses: actions/upload-artifact@v4
         with:
@@ -81,11 +81,11 @@ jobs:
 
       - name: 构建并推送多平台 Docker 镜像
         run: |
-            docker buildx build \
-                --file ./Dockerfile \
-                --label image.source=自动签到节点 \
-                --label image.version=${{ needs.fetch-version.outputs.VERSION }} \
-                --platform linux/amd64,linux/arm64 \
-                --tag ccr.ccs.tencentyun.com/misaka-public/waadri-sign-node:latest \
-                --tag ccr.ccs.tencentyun.com/misaka-public/waadri-sign-node:${{ needs.fetch-version.outputs.VERSION }} \
-                --push .
+          docker buildx build \
+              --file ./Dockerfile \
+              --label image.source=自动签到节点 \
+              --label image.version=${{ needs.fetch-version.outputs.VERSION }} \
+              --platform linux/amd64,linux/arm64 \
+              --tag ccr.ccs.tencentyun.com/misaka-public/waadri-sign-node:latest \
+              --tag ccr.ccs.tencentyun.com/misaka-public/waadri-sign-node:${{ needs.fetch-version.outputs.VERSION }} \
+              --push .
