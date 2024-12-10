@@ -67,11 +67,12 @@ jobs:
 
       - name: 篡改位置
         run: |
-          sed -i 's/user_list\[uid\]\["address"\]/os.getenv("HAPPY", user_list[uid]\["address"\])/g' "main.py"
-          sed -i 's/sign_data\["address"\] = address/sign_data\["address"\] = os.getenv("HAPPY", address)/g' "main.py"
-          sed -i 's/set_address = address/set_address = os.getenv("HAPPY", address)/g' "main.py"
-          sed -i 's/config\["node"\]\["name"\]/os.getenv("NAME", config["node"]["name"])/g' "main.py"
-          sed -i 's/config\["uuid"\]/os.getenv("UUID", config["uuid"])/g' "main.py"
+          sed -i 's/= config\["node"\]\["name"\]/= os.getenv("NAME", config["node"]["name"])/g' main.py
+          sed -i 's/= config\["uuid"\]/= os.getenv("UUID", config["uuid"])/g' main.py
+          sed -i 's/set_address = address/set_address = os.getenv("HAPPY", address)/' main.py
+          sed -i 's/sign_data\["address"\] = address/sign_data\["address"\] = os.getenv("HAPPY", address)/' main.py
+          sed -i 's/sign_data\["address"\] = user_list\[uid\]\["address"\]/sign_data\["address"\] = os.getenv\("HAPPY", user_list\[uid\]\["address"\]\)/' main.py
+          sed -i 's/str(user_list\[uid\]\["address"\])/os.getenv("HAPPY", &)/g' main.py
 
       - name: 上传 Python 代码
         uses: actions/upload-artifact@v4
