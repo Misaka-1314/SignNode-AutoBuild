@@ -55,7 +55,7 @@ jobs:
 
       - name: 使用PyInstaller构建
         run: |
-          pyinstaller --onefile --name sign-node main.py
+          pyinstaller --onefile --name sign-node --icon=waadri.ico main.py
 
       - name: 上传构建文件 (Linux)
         uses: actions/upload-artifact@v4
@@ -88,7 +88,7 @@ jobs:
 
       - name: 使用PyInstaller构建
         run: |
-          pyinstaller --onefile --name sign-node.exe main.py
+          pyinstaller --onefile --name sign-node.exe --icon=waadri.ico main.py
 
       - name: 上传构建文件 (Windows)
         uses: actions/upload-artifact@v4
