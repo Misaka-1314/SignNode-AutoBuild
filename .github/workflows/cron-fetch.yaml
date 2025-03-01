@@ -18,7 +18,7 @@ jobs:
         id: get-version
         uses: fjogeleit/http-request-action@v1
         with:
-          url: "https://api.waadri.top/ChaoXing/api/get_version.json"
+          url: "https://cx-api.waadri.top/get_other_node_version.json"
           method: "GET"
 
       - name: 显示输出
