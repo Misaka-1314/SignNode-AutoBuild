@@ -4,5 +4,3 @@
 build
 dist
 tmp
-
-*.sh
