@@ -1,6 +1,13 @@
 *.py
 *.spec
 
+package-lock.json
+
+.temp
+.cache
+.vscode
+
+node_modules
 build
 dist
 tmp
