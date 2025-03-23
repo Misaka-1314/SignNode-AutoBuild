@@ -2,6 +2,7 @@
 home: true
 icon: iconfont icon-home
 title: 首页
+index: false
 heroImage: https://avatars.githubusercontent.com/u/90495619?v=4
 heroText: 超新星学习通自动签到抢答系统
 tagline: 一个完全免费使用的自动签到抢答系统，作者从未授权在任何平台上传播或销售网站内容。

@@ -1,6 +1,6 @@
 ---
 title: Q群禁问
-icon: iconfont icon-creative
+icon: fa-regular fa-circle-xmark
 category:
   - Question
 sticky: true
