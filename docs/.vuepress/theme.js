@@ -33,9 +33,9 @@ export default hopeTheme(
         plugins: {
             // 搜索从设置转移到主题
             docsearch: {
-                appId: "",
-                apiKey: "",
-                indexName: "",
+                appId: "PXM1NKLPUB",
+                apiKey: "f9ef8d585c74dd74289b1463d745a607",
+                indexName: "waadri",
             },
             // 图标
             icon: {
