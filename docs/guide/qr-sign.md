@@ -46,4 +46,4 @@ order: 8
 + 如果在系统为您签到前您自己已经自行签到了或者二维码签到已过期，此时系统也会发送签到失败或者签到过期的邮件/微信通知，并且后续继续使用小程序扫码系统也不会再为您签到了。
 
 图示：
-![1](<https://github.com/user-attachments/assets/a5666f00-d6d9-4840-aedf-66136653a7fe> =200x)
+![1](<[https://github.com/user-attachments/assets/a5666f00-d6d9-4840-aedf-66136653a7fe](https://cx-static.waadri.top/image/1.2.jpg)> =200x)
