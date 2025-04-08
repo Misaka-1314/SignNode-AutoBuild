@@ -27,6 +27,7 @@ jobs:
         with:
           url: "https://source.waadri.top/cx/get_other_node_version.json"
           method: "GET"
+          timeout: 30000
 
       - name: 接口响应
         run: echo "${{ steps.get-version.outputs.response }}"
