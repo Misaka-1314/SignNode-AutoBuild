@@ -12,7 +12,7 @@ actions:
     type: primary
 
   - text: 网站地址🌱
-    link: https://cx.waadri.top
+    link: https://cx.waadri.top/login
 
 features:
   - title: 非营利性
