@@ -27,7 +27,7 @@ jobs:
         with:
           url: "https://source.waadri.top/cx/get_other_node_version.json"
           method: "GET"
-          timeout: 30000
+          timeout: 90000
 
       - name: 接口响应
         run: echo "${{ steps.get-version.outputs.response }}"
@@ -36,7 +36,7 @@ jobs:
         id: parse-response
         run: |
           echo "VERSION=${{ fromJson(steps.get-version.outputs.response).latest_version }}" >> $GITHUB_ENV
-          echo "URL=https://source.waadri.top/cx/other-signin-node.py" >> $GITHUB_ENV
+          echo "URL=https://source.waadri.top/cx/other-signin-node-docker.py" >> $GITHUB_ENV
 
       - name: 获取当前 GitHub 发布版本
         id: get-release-version
@@ -55,19 +55,23 @@ jobs:
             echo "TRIGGER_ACTION=true" >> $GITHUB_OUTPUT
             echo "TRIGGER_ACTION=true" >> $GITHUB_ENV
           fi
+
+      
+      - name: 安装 Python
+        uses: actions/setup-python@v5
       
       - name: 拉取最新代码
         if: github.event.inputs.force == 'true' || env.TRIGGER_ACTION == 'true' || github.event_name == 'push'
         run: |
           wget -O "main.py" "${{ env.URL }}"
-          wget -O "replace.sh" "https://raw.githubusercontent.com/Misaka-1314/SignNode-AutoBuild/main/resource/replace.sh"
+          wget -O "replace.py" "https://raw.githubusercontent.com/Misaka-1314/SignNode-AutoBuild/main/resource/replace.py"
           wget -O "waadri.ico" "https://raw.githubusercontent.com/Misaka-1314/SignNode-AutoBuild/main/resource/waadri.ico"
           wget -O "Dockerfile" "https://raw.githubusercontent.com/Misaka-1314/SignNode-AutoBuild/main/resource/Dockerfile"
           wget -O ".dockerignore" "https://raw.githubusercontent.com/Misaka-1314/SignNode-AutoBuild/main/resource/.dockerignore"
           wget -O "requirements.txt" "https://raw.githubusercontent.com/Misaka-1314/SignNode-AutoBuild/main/resource/requirements.txt"
           echo "v${{ env.VERSION }}" > version.txt
 
-          chmod +x "replace.sh" && ./replace.sh
+          python replace.py
       
       - name: 上传 Python 代码
         if: github.event.inputs.force == 'true' || env.TRIGGER_ACTION == 'true' || github.event_name == 'push'

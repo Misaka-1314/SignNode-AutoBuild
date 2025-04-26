@@ -1,8 +1,9 @@
-aiofiles
 aiohttp
+aiofiles
 aiosmtplib
-portalocker
+certifi
+pycryptodome
 requests
+tenacity
 websockets
 pyyaml
-pycryptodome

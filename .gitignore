@@ -1,4 +1,4 @@
-*.py
+*main.py
 *.spec
 
 package-lock.json
