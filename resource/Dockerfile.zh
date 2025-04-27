@@ -1,12 +1,12 @@
 FROM python:3.12-alpine
 
-RUN apk add tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
-
-RUN apk add ca-certificates
-
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tencent.com/g' /etc/apk/repositories \
-    && apk add --update --no-cache python3 py3-pip \
-    && rm -rf /var/cache/apk/*
+    && apk add --update --no-cache python3 py3-pip tzdata ca-certificates \
+    && rm -rf /var/cache/apk/* \
+    && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo Asia/Shanghai > /etc/timezone
+
+ENV IS_DOCKER=1
 
 VOLUME /data
 
