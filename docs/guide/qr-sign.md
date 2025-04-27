@@ -33,7 +33,7 @@ order: 8
 ## 视频教程
 
 <video width="600" height="340" controls>
-  <source src="https://source.waadri.top/sun/video/qrcode.mp4" type="video/mp4">
+  <source src="https://source.waadri.top/video/qrcode.mp4" type="video/mp4">
 </video>
 
 ## 详细步骤
