@@ -23,6 +23,19 @@ jobs:
         run: npm run docs:build
         working-directory: docs
 
+      - name: 签出原文件
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: docs/.vuepress/dist/temp
+          fetch-depth: 0      
+      
+      - name: 操作文件
+        run: |
+          mkdir source && cp -r temp/docs/* ./source
+          rm -rf temp
+        working-directory: docs/.vuepress/dist
+
       - name: 提交文件
         run: |
             git init
