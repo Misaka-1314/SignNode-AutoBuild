@@ -10,7 +10,7 @@ order: 8
 
 ## 如何通过 **辅助扫码小程序** 进行二维码签到？
 
-![qr](</image/miniprogram-qrcode.png> =300x)
+<img src="/image/miniprogram-qrcode.png" style="width: min(30vw, 240px)" alt="二维码上传小程序" />
 
 ### 为什么不能用过期二维码了？
 
@@ -46,4 +46,4 @@ order: 8
 + 如果在系统为您签到前您自己已经自行签到了或者二维码签到已过期，此时系统也会发送签到失败或者签到过期的邮件/微信通知，并且后续继续使用小程序扫码系统也不会再为您签到了。
 
 图示：
-![1](<https://cx-static.waadri.top/image/1.2.jpg> =200x)
+<img src="https://cx-static.waadri.top/image/1.2.jpg" style="width: min(30vw, 240px)" alt="二维码上传小程序截屏" />
