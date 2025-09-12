@@ -3,7 +3,7 @@ import { hopeTheme } from "vuepress-theme-hope";
 export default hopeTheme(
     {
         docsDir: "docs",
-        logo: "https://github.com/WAADRI.png",
+        logo: "https://avatars.githubusercontent.com/u/90495619?v=4",
         repo: "Misaka-1314/SignNode-AutoBuild",
         hostname: "https://doc.waadri.top",
 
@@ -65,24 +65,12 @@ export default hopeTheme(
                     movable: true,
                 },
             },
-            // PWA
-            pwa: {
-                manifest: {
-                    name: "WAADRI 免费的学习通签到平台",
-                    short_name: "WAADRI 学习通签到",
-                    start_url: "/",
-                    icons: [{
-                        src: 'https://github.com/WAADRI.png',
-                        sizes: "460x460",
-                        type: "image/png",
-                    }],
-                },
-                cacheImage: true,
-                cacheHTML: true,
-                update: "force",
-            },
             // SEO
             seo: true,
+            // 启用 Tabs 支持
+            markdown: {
+                tabs: true,
+            },
         },
     },
     {

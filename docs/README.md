@@ -11,6 +11,10 @@ actions:
     link: /guide/
     type: primary
 
+  - text: 进阶教程💡
+    link: /advance/
+    type: primary
+
   - text: 网站地址🌱
     link: https://cx.waadri.top/login
 
