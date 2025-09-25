@@ -65,12 +65,16 @@ export default hopeTheme(
                     movable: true,
                 },
             },
+            // PWA
+            pwa: false,
             // SEO
             seo: true,
             // 启用 Tabs 支持
             markdown: {
                 tabs: true,
             },
+            contributors: false,
+            changelog: false,
         },
     },
     {
