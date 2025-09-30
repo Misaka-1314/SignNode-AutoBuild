@@ -103,6 +103,7 @@ jobs:
         secrets:
             TENCENT_CCR_USERNAME: ${{ secrets.TENCENT_CCR_USERNAME }}
             TENCENT_CCR_PASSWORD: ${{ secrets.TENCENT_CCR_PASSWORD }}
+            DOCKER_REGISTRY_PASSWORD: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
 
     call_workflow-2:
         needs: compare-versions
