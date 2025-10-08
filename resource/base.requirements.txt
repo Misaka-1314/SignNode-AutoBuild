@@ -1,0 +1,12 @@
+aiofiles
+aiohttp
+aiosmtplib
+certifi
+filetype
+numpy
+orjson
+psutil
+pycryptodome
+tenacity
+websockets
+opencv-python-headless
