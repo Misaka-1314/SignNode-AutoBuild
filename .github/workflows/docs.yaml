@@ -16,7 +16,7 @@ jobs:
           ref: main
 
       - name: 安装依赖
-        run: npm i -D
+        run: npm i -D --force
         working-directory: docs
 
       - name: 构建文档
