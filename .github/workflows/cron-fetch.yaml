@@ -50,10 +50,10 @@ jobs:
         run: |
           echo "当前版本=v${{ env.VERSION }} 已构建版本=${{ env.CURRENT_RELEASE_VERSION }}"
 
-          if [ "v$VERSION" != "$CURRENT_RELEASE_VERSION" || "${{ github.event.inputs.force }}" == "true" ]; then
+          if [[ "v${VERSION}" != "${CURRENT_RELEASE_VERSION}" || "${{ github.event.inputs.force }}" == "true" ]]; then
             echo "版本更新，触发新的 Action"
-            echo "TRIGGER_ACTION=true" >> $GITHUB_OUTPUT
-            echo "TRIGGER_ACTION=true" >> $GITHUB_ENV
+            echo "TRIGGER_ACTION=true" >> "$GITHUB_OUTPUT"
+            echo "TRIGGER_ACTION=true" >> "$GITHUB_ENV"
           fi
 
       - name: 安装 Python
