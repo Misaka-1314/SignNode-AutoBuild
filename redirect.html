@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>学习通签到联盟</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f8ff;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        #introduction {
+            margin-bottom: 30px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        #introduction strong {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        #alliance-sites {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        #alliance-sites li {
+            background-color: #e0f2f7;
+            color: #37474f;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            width: calc(100% - 40px);
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #alliance-sites li:last-child {
+            margin-bottom: 0;
+        }
+
+        #alliance-sites li:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        h2 {
+            color: #495057;
+            margin-bottom: 15px;
+        }
+
+        #redirection-info {
+            margin-top: 25px;
+        }
+
+        #redirection-info p {
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        #target-link {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 28px;
+            text-decoration: none;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s ease-in-out;
+            width: calc(100% - 0px);
+        }
+
+        button:hover {
+            background-color: #1e7e34;
+        }
+
+        #countdown {
+            font-weight: bold;
+            color: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="introduction">
+            <h1>欢迎来到 <strong style="font-size: 1.2em;">学习通签到联盟</strong></h1>
+            <p>由于本站使用繁琐、要求众多，我们为您精选了更多方便使用的签到网站或小程序：</p>
+            <ul id="alliance-sites">
+                <li>
+                    <span style="font-weight: bold;">修猫学习助手</span> - 小程序+网页，随时随地都能签到
+                </li>
+                <li>
+                    <span style="font-weight: bold;">上签</span> - 致力于为富哥富姐带来远超WAADRI的体验，将白嫖用户拦在外面给付费用户腾空间，24小时为你服务
+                </li>
+                <li>
+                    <span style="font-weight: bold;">不想去上课</span> - 基于 Python 的 PC 端学习通签到工具
+                </li>
+                <li>
+                    <span style="font-weight: bold;">御坂网络 Misaka</span> - 小程序+网页，随时随地都能签到
+                </li>
+                <li>
+                    <span style="font-weight: bold;">本站</span> - 更多精彩，敬请期待
+                </li>
+            </ul>
+        </div>
+        <div id="redirection-info">
+            <h2>即将为您智能选择并跳转至一个优质站点...</h2>
+            <p>您将在 <span id="countdown">5</span> 秒后自动前往：</p>
+            <p><a id="target-link" href="" target="_blank"></a></p>
+            <button id="jump-button">立即跳转</button>
+        </div>
+    </div>
+
+    <script>
+        const links = [
+            { url: "/login", title: "本站", device: "all", probability: 1 },
+            { url: "https://xiucat.top", title: "修猫学习助手", device: "all", probability: 60 },
+            { url: "https://api2.function.icu", title: "上签", device: "all", probability: 60 },
+            { url: "https://github.com/kekeaiaixueer/xxt_python", title: "不想去上课", device: "all", probability: 60 },
+            { url: "weixin://dl/business/?appid=wxb42fe32e6e071916&path=packages/sign-package/pages/home/home", title: "御坂网络 Misaka", device: "mobile", probability: 60 },
+            { url: "https://cx.micono.eu.org", title: "御坂网络 Misaka", device: "desktop", probability: 60 },
+        ];
+
+        let countdownElement = document.getElementById('countdown');
+        let jumpButton = document.getElementById('jump-button');
+        let targetLinkElement = document.getElementById('target-link');
+        let introductionElement = document.getElementById('introduction');
+        let countdownTime = 5;
+        let targetObject;
+
+        function getTargetLink() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const isMobile = /iphone|ipad|ipod|android/.test(userAgent);
+            /* 根据 UA 过滤设备限制 */
+            const filteredLinks = links.filter(link => {
+                return link.device === 'all' || (isMobile && link.device === 'mobile') || (!isMobile && link.device === 'desktop');
+            });
+            console.info("待抽取链接：", filteredLinks);
+            /* 根据概率抽取链接 */
+            if (filteredLinks.length > 0) {
+                let weightedList = [];
+                filteredLinks.forEach(link => {
+                    for (let i = 0; i < (link.probability || 1); i++) {
+                        weightedList.push(link);
+                    }
+                });
+
+                if (weightedList.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * weightedList.length);
+                    targetObject = weightedList[randomIndex];
+                    targetLinkElement.href = targetObject.url;
+                    targetLinkElement.textContent = targetObject.title || targetObject.url;
+                } else {
+                    targetLinkElement.textContent = "暂无可用站点";
+                    targetLinkElement.removeAttribute('href');
+                    jumpButton.disabled = true;
+                }
+            } else {
+                targetLinkElement.textContent = "暂无可用站点";
+                targetLinkElement.removeAttribute('href');
+                jumpButton.disabled = true;
+            }
+        }
+
+        function countdown() {
+            countdownElement.textContent = countdownTime;
+            if (countdownTime <= 0 && targetObject) {
+                window.location.href = targetObject.url;
+            } else if (countdownTime > 0) {
+                countdownTime--;
+                setTimeout(countdown, 1000);
+            }
+        }
+
+        function jumpNow() {
+            if (targetObject) {
+                window.location.href = targetObject.url;
+            }
+        }
+
+        getTargetLink();
+        countdown();
+
+        jumpButton.addEventListener('click', jumpNow);
+
+        document.addEventListener('visibilitychange', function () {
+            if (!document.hidden) {
+                getTargetLink();
+                countdownTime = 3;
+                countdownElement.textContent = countdownTime;
+                jumpButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>
