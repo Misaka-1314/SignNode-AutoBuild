@@ -1,0 +1,6 @@
+.git
+tmp
+
+*.md
+*.sh
+LICENSE
