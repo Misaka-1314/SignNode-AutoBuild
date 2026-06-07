@@ -1,0 +1,4 @@
+User-agent:*
+Disallow:
+
+Sitemap: https://doc.waadri.top/./sitemap.xml
